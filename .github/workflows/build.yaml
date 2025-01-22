@@ -23,6 +23,9 @@ jobs:
       contents: read
       attestations: write
       id-token: write
+    env: 
+        REGISTRY: index.docker.io
+        IMAGE_NAME: jameswoolfenden/auto-gofmt  
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -52,6 +55,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: jameswoolfenden/auto-gofmt
+          subject-name:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
