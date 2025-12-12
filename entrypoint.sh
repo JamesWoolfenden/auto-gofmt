@@ -31,11 +31,10 @@ _git_changes() {
 }
 
 # PROGRAM
-FORMATTER_RESULT=0
 echo "Formatting files..."
 echo "Files:"
 gofumpt $INPUT_FORMATTER_OPTIONS \
-  || { FORMATTER_RESULT=$?; echo "Problem running gofumpt with $INPUT_FORMATTER_OPTIONS"; exit 1; }
+  || { echo "Problem running gofumpt with $INPUT_FORMATTER_OPTIONS"; exit 1; }
 
 # To keep runtime good, just continue if something was changed
 if _git_changed; then
@@ -53,7 +52,7 @@ if _git_changed; then
       # --diff-filter=d excludes deleted files
       for file in $(git diff --name-only --diff-filter=d HEAD^..HEAD)
       do
-        git add $file
+        git add "$file"
       done
     else
       # Add changes to git
@@ -73,13 +72,6 @@ if _git_changed; then
     echo "Changes pushed successfully."
   fi
 else
-  # case when --check is used so there will never have something to commit but there are formattded files
-  if [ "$FORMATTER_RESULT" -eq 1 ]; then
-    echo "Formatter found unformatted files!"
-    exit 1
-  else
-    echo "Finishing dry-run."
-  fi
   echo "No unformatted files!"
   echo "Nothing to commit. Exiting."
 fi

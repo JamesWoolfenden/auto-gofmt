@@ -1,9 +1,11 @@
-FROM golang:1.24-alpine
+FROM golang:1.25-alpine
 
 ENV GOPROXY=https://proxy.golang.org,direct
 ENV GOSUMDB=sum.golang.org
 
-# TODO: do we need all of these?
+# bash: required for entrypoint.sh
+# git: required for all git operations
+# git-lfs: optional but recommended for repos with LFS-tracked files
 RUN apk --no-cache add bash git git-lfs &&\
     go install mvdan.cc/gofumpt@v0.9.2
 
